@@ -17,17 +17,31 @@ app.use(express.json());
 const userRoute = require('./router/userRout')
 app.use('/', userRoute)
 
+// io.use((socket, next) => {
+//     const name = socket.handshake.auth.namename
+//     socket.username = username;
+//     next();
+// })
+
 io.on("connection", (socket) => {
     socket.on("user-join", (roomId) => {
         if (roomId) {
+
             socket.join(roomId)
             console.log(`connecte user to room ${roomId}`)
+            console.log(io.sockets.adapter.rooms.get(roomId).size)
+
+            // if (io.sockets.adapter.rooms.get(roomId).size == 2) {
+            //     socket.off("user-leave")
+            // }
         }
     })
 
     socket.on("chat-user", ({ roomNumber, msg }) => {
         console.log('message: ' + msg);
         io.to(roomNumber).emit('user-message', msg);
+        // console.log(io.sockets.clients(roomNumber))
+
     })
 
     socket.on("user-leave", (roomId) => {

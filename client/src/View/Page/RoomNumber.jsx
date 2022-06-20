@@ -10,9 +10,12 @@ const RoomNumber = () => {
 
   let { roomNumber } = useParams();
 
+  // const namename = "Katya";
   useEffect(() => {
     if (roomNumber) {
       socket.emit("user-join", roomNumber);
+      // socket.auth = { namename };
+      // socket.connect();
     }
 
     socket.on("user-message", (msg) => {
