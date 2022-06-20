@@ -33,6 +33,7 @@ const RoomNumber = () => {
     try {
       e.preventDefault();
 
+      // console.log(e.target.elements.msg.value);
       const msg = e.target.elements.msg.value;
 
       if (msg.length > 0) {
@@ -40,6 +41,8 @@ const RoomNumber = () => {
       } else {
         console.log(`the message to short`);
       }
+
+      e.target.reset();
     } catch (error) {
       console.log(error);
     }
