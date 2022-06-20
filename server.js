@@ -1,5 +1,6 @@
 const express = require("express")
 const mongoose = require("mongoose")
+const path = require('path')
 const http = require("http")
 const { Server } = require("socket.io")
 const app = express();
@@ -36,6 +37,10 @@ io.on("connection", (socket) => {
         }
     });
 })
+
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, './projects/build', 'index.html'));
+});
 
 server.listen(PORT, () => {
     console.log(`listening on http://localhost:${PORT}`);
