@@ -41,11 +41,11 @@ io.on("connection", (socket) => {
 
     socket.on("user-leave", ({ roomNumber, name }) => {
         if (roomNumber) {
-            socket.leave(roomNumber);
             console.log(`leave ${name} to room ${roomNumber}`)
             connectedUsers.splice(connectedUsers.indexOf(name), 1)
             console.log(connectedUsers)
             io.to(roomNumber).emit("user-list", connectedUsers)
+            socket.leave(roomNumber);
         }
     });
 })

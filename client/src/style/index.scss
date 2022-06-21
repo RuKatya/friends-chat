@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.app {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &__context {
+        width: clamp(250px, 80%, 2000px);
+        text-align: center;
+
+        &--enterName {
+            background-color: beige;
+            width: 250px;
+            margin: 2% auto;
+            font-size: clamp(16px, 0.8vw, 30px);
+
+            @media only screen and (max-width:750px) {
+                margin: 5% auto;
+            }
+        }
+
+        &--listChats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            margin: 2% 0%;
+
+            @media only screen and (max-width:750px) {
+                grid-template-columns: repeat(1, 1fr);
+                margin: 5% 0%;
+            }
+
+            a {
+                padding: 5% 0%;
+                font-size: clamp(18px, 1.3vw, 30px);
+            }
+        }
+    }
+}

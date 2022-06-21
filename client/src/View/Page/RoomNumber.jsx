@@ -13,13 +13,9 @@ const RoomNumber = ({ name }) => {
 
   let { roomNumber } = useParams();
 
-  // const namename = "Katya";
   useEffect(() => {
     if (roomNumber) {
       socket.emit("user-join", { roomNumber, name });
-      // socket.auth = { namename };
-      // socket.connect();
-      // userNameEnter.push(name);
     }
 
     socket.on("user-get-in", (name) => {
@@ -46,6 +42,19 @@ const RoomNumber = ({ name }) => {
       console.log(connectedUsers);
       setUserList(connectedUsers);
     });
+
+    if (window.close) {
+      console.log(`da`);
+    }
+
+    window.addEventListener("beforeunload", (e) => {
+      e.preventDefault();
+      e.returnValue = "";
+    });
+    //   if (window.closed) {
+    //     socket.emit("user-leave", { roomNumber, name });
+    //     socket.off("user-message");
+    //   }
 
     return () => {
       socket.emit("user-leave", { roomNumber, name });
@@ -83,7 +92,7 @@ const RoomNumber = ({ name }) => {
     <div>
       <h2>
         RoomNumber {roomNumber} | count of Users:{" "}
-        <span>{userList ? <>{userList.length}</> : null}</span>
+        <span>{userList ? <>{userList.length}</> : <>0</>}</span>
       </h2>
 
       <ul>
