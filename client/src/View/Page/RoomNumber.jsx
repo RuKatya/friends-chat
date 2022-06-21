@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { socket } from "../../index";
+import { useNavigate } from "react-router-dom";
+import Message from "../Components/Message";
+import { useRef } from "react";
 
 let textsTemp = [];
 
@@ -10,10 +13,21 @@ const RoomNumber = ({ name }) => {
   const [amountOfUsers, setAmountOfUsers] = useState();
   const [userList, setUserList] = useState();
   const [up, setUp] = useState(2);
+  const message = document.querySelector(".room__context--messages");
+  const element = useRef(null);
+
+  // console.log(element.current?.clientHeight);
 
   let { roomNumber } = useParams();
 
+  let navigate = useNavigate();
+
   useEffect(() => {
+    // message?.scrollIntoView({ behavior: "smooth" });
+    // element.scrollTo(0, element.current?.clientHeight);
+    // element.current?.scrollIntoView({ behavior: "smooth" });
+
+    // element.current?.scrollTop = element.current?.clientHeight;
     if (roomNumber) {
       socket.emit("user-join", { roomNumber, name });
     }
@@ -43,18 +57,10 @@ const RoomNumber = ({ name }) => {
       setUserList(connectedUsers);
     });
 
-    if (window.close) {
-      console.log(`da`);
-    }
-
     window.addEventListener("beforeunload", (e) => {
       e.preventDefault();
       e.returnValue = "";
     });
-    //   if (window.closed) {
-    //     socket.emit("user-leave", { roomNumber, name });
-    //     socket.off("user-message");
-    //   }
 
     return () => {
       socket.emit("user-leave", { roomNumber, name });
@@ -89,46 +95,84 @@ const RoomNumber = ({ name }) => {
   console.log(massages);
 
   return (
-    <div>
-      <h2>
-        RoomNumber {roomNumber} | count of Users:{" "}
-        <span>{userList ? <>{userList.length}</> : <>0</>}</span>
-      </h2>
+    <>
+      {name ? (
+        <div className="room">
+          <h2 className="room__header">
+            Room: {roomNumber} |{/* | count of Users:{" "} */}
+            <div>{userList ? <> | {amountOfUsers}</> : <>0</>}</div>
+          </h2>
 
-      <ul>
-        {userList ? (
-          <>
-            {userList.map((user) => {
-              return <li>{user}</li>;
-            })}
-          </>
-        ) : (
-          <>{null}</>
-        )}
-      </ul>
+          <div className="room__context">
+            {/* <ul className="room__context--userList">
+              {userList ? (
+                <>
+                  {userList.map((user) => {
+                    return <li>{user}</li>;
+                  })}
+                </>
+              ) : (
+                <>{null}</>
+              )}
+            </ul> */}
 
-      <form onSubmit={handleForm}>
-        <input type="text" name="msg" placeholder="Enter message" />
-        <button type="submit">Send</button>
-      </form>
+            <div>
+              {userNameGet ? (
+                <div className="room__context--userConnect">
+                  User {userNameGet} is here
+                </div>
+              ) : null}
 
-      {userNameGet ? <div>User {userNameGet} is here</div> : null}
+              <div className="room__context--messages">
+                {massages
+                  .filter((text) => text.roomNumber === roomNumber)
+                  .map((text, index) => {
+                    return (
+                      <Message
+                        nameUser={text.name}
+                        messageUser={text.msg}
+                        key={index}
+                      />
+                    );
+                  })}
+                <div ref={element} />
+              </div>
 
-      <ul>
-        {massages
-          .filter((text) => text.roomNumber === roomNumber)
-          .map((text, index) => {
-            return (
-              <li key={index}>
-                {text.name}:{text.msg}
-              </li>
-            );
-          })}
-      </ul>
-    </div>
+              <form onSubmit={handleForm} className="room__context--form">
+                <textarea name="msg" placeholder="Enter message"></textarea>
+                <button type="submit">Send</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <>{navigate(`/`)}</>
+      )}
+    </>
   );
 };
 
 RoomNumber.propTypes = {};
 
 export default RoomNumber;
+// if (window.close) {
+//   // console.log(`da`);
+//   navigate(`/`);
+// }
+
+// if (window.close) {
+//   // console.log(`da`);
+//   navigate(`/`);
+// }
+// if (window.onunload) {
+//   console.log("bla");
+// }
+// navigate(`/`);
+
+// socket.emit("user-leave", { roomNumber, name });
+// socket.off("user-message");,
+
+//   if (window.closed) {
+//     socket.emit("user-leave", { roomNumber, name });
+//     socket.off("user-message");
+//   }

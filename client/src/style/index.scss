@@ -1,6 +1,12 @@
 body {
     margin: 0;
     padding: 0;
+    overflow: hidden;
+}
+
+a {
+    text-decoration: none;
+    color: rgb(35, 1, 189);
 }
 
 .app {
@@ -34,9 +40,12 @@ body {
             }
 
             a {
-                padding: 5% 0%;
+                width: 150px;
+                margin: 5% auto;
                 font-size: clamp(18px, 1.3vw, 30px);
             }
         }
     }
 }
+
+@import './room';

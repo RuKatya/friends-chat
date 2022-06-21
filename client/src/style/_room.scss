@@ -1,0 +1,87 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,600;1,700;1,800;1,900&display=swap');
+
+.room {
+    font-family: 'Nunito Sans', sans-serif;
+
+    &__header {
+        text-align: center;
+        background-color: rgb(131, 33, 217);
+        margin: 0;
+        padding: 2% 0%;
+        color: white;
+        font-size: clamp(20px, 1.5vw, 40px);
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+    }
+
+    ul,
+    li {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    &__context {
+        // display: grid;
+        // grid-template-columns: 0.5fr 3fr;
+        // grid-template-columns: repeat(2, 1fr);
+        height: 90vh;
+        overflow: hidden;
+
+        &--userList {
+            background-color: aqua;
+        }
+
+        &--userConnect {
+            text-align: center;
+            padding: 0.5% 0%;
+            background-color: rgb(179, 233, 255);
+        }
+
+        &--messages {
+            // background-color: rgb(23, 84, 63);
+            width: 90%;
+            margin: 1% auto;
+            height: 70vh;
+            overflow-y: scroll;
+
+            &__message {
+                // background-color: rgb(179, 233, 255);
+                // color: rgb(179, 146, 13);
+                // background-color: aquamarine;
+                margin: 1% 0%;
+                padding: 0.5% 1%;
+            }
+        }
+
+        &--form {
+            background-color: rgb(131, 33, 217);
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            padding: 0.2% 0%;
+
+            textarea {
+                width: 80%;
+                padding: 0.5%;
+                border-radius: 0.5rem;
+                border: none;
+                font-family: 'Nunito Sans', sans-serif;
+            }
+
+            button {
+                width: 80px;
+                padding: 0.5% 0%;
+                border-radius: 0.5rem;
+                border: none;
+                background-color: rgb(179, 233, 255);
+                font-weight: bold;
+            }
+        }
+    }
+}
