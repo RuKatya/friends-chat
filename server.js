@@ -37,9 +37,10 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on("chat-user", ({ roomNumber, msg }) => {
+    socket.on("chat-user", ({ roomNumber, msg, name }) => {
+        console.log(`name:` + name)
         console.log('message: ' + msg);
-        io.to(roomNumber).emit('user-message', msg);
+        io.to(roomNumber).emit('user-message', { msg, name });
         // console.log(io.sockets.clients(roomNumber))
 
     })

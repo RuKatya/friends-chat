@@ -8,11 +8,16 @@ const RoutesPage = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
+        {/* <Route path="/" element={<Layout />}>
           <Route index element={<Auth />} />
           <Route path="chats" element={<App />}>
             <Route path=":roomNumber" element={<RoomNumber />} />
           </Route>
+        </Route> */}
+        <Route path="/" element={<Layout />}>
+          {/* <Route index element={<Auth />} /> */}
+          <Route index element={<App />} />
+          <Route path=":roomNumber" element={<RoomNumber />} />
         </Route>
       </Routes>
     </BrowserRouter>

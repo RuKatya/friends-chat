@@ -5,6 +5,7 @@ import { socket } from "../../index";
 let textsTemp = [];
 
 const RoomNumber = () => {
+  const [name, setName] = useState();
   const [massages, setMassages] = useState([]);
   const [up, setUp] = useState(2);
 
@@ -18,9 +19,11 @@ const RoomNumber = () => {
       // socket.connect();
     }
 
-    socket.on("user-message", (msg) => {
+    socket.on("user-message", ({ msg, name }) => {
+      console.log(msg);
+      console.log(name);
       if (msg && roomNumber) {
-        textsTemp.push({ msg, roomNumber });
+        textsTemp.push({ msg, roomNumber, name });
         setMassages(textsTemp);
         setUp(Math.random());
       }
@@ -36,13 +39,18 @@ const RoomNumber = () => {
     try {
       e.preventDefault();
 
-      // console.log(e.target.elements.msg.value);
-      const msg = e.target.elements.msg.value;
+      let msg = e.target.elements.msg.value;
+      // console.log(name);
 
-      if (msg.length > 0) {
-        socket.emit("chat-user", { roomNumber, msg });
+      // console.log(msg);
+      if (name) {
+        if (msg.length > 0) {
+          socket.emit("chat-user", { roomNumber, msg, name });
+        } else {
+          alert("message too short kapara");
+        }
       } else {
-        console.log(`the message to short`);
+        alert("Must include name bitch");
       }
 
       e.target.reset();
@@ -51,9 +59,32 @@ const RoomNumber = () => {
     }
   }
 
+  // console.log(name);
+
+  console.log(massages);
+
   return (
     <div>
       <h2>RoomNumber {roomNumber}</h2>
+      <div>
+        {/* {name ? (
+          <div>
+            {" "}
+            User<span>{name}</span>is here
+          </div>
+        ) : null}{" "} */}
+      </div>
+      <form>
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter name"
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
+        />
+      </form>
+
       <form onSubmit={handleForm}>
         <input type="text" name="msg" placeholder="Enter message" />
         <button type="submit">Send</button>
@@ -63,7 +94,11 @@ const RoomNumber = () => {
         {massages
           .filter((text) => text.roomNumber === roomNumber)
           .map((text, index) => {
-            return <li key={index}>{text.msg}</li>;
+            return (
+              <li key={index}>
+                {text.name}:{text.msg}
+              </li>
+            );
           })}
       </ul>
     </div>
