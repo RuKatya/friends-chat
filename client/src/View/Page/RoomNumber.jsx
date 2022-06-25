@@ -13,38 +13,30 @@ const RoomNumber = ({ name }) => {
   const [amountOfUsers, setAmountOfUsers] = useState();
   const [userList, setUserList] = useState();
   const [up, setUp] = useState(2);
-  const message = document.querySelector(".room__context--messages");
   const element = useRef(null);
-
-  // console.log(element.current?.clientHeight);
 
   let { roomNumber } = useParams();
 
   let navigate = useNavigate();
 
   useEffect(() => {
-    // message?.scrollIntoView({ behavior: "smooth" });
-    // element.scrollTo(0, element.current?.clientHeight);
-    // element.current?.scrollIntoView({ behavior: "smooth" });
-
-    // element.current?.scrollTop = element.current?.clientHeight;
     if (roomNumber) {
       socket.emit("user-join", { roomNumber, name });
     }
 
     socket.on("user-get-in", (name) => {
-      console.log(`user get in ${name}`);
+      // console.log(`user get in ${name}`);
       setUserNameGet(name);
     });
 
     socket.on("users-amount", (countOfUsers) => {
-      console.log(`amount users ${countOfUsers}`);
+      // console.log(`amount users ${countOfUsers}`);
       setAmountOfUsers(countOfUsers);
     });
 
     socket.on("user-message", ({ msg, name }) => {
-      console.log(msg);
-      console.log(name);
+      // console.log(msg);
+      // console.log(name);
       if (msg && roomNumber) {
         textsTemp.push({ msg, roomNumber, name });
         setMassages(textsTemp);
@@ -53,7 +45,7 @@ const RoomNumber = ({ name }) => {
     });
 
     socket.on("user-list", (connectedUsers) => {
-      console.log(connectedUsers);
+      // console.log(connectedUsers);
       setUserList(connectedUsers);
     });
 
@@ -68,7 +60,7 @@ const RoomNumber = ({ name }) => {
     };
   }, [roomNumber]);
 
-  console.log(userList);
+  // console.log(userList);
 
   function handleForm(e) {
     try {
@@ -91,8 +83,6 @@ const RoomNumber = ({ name }) => {
       console.log(error);
     }
   }
-
-  console.log(massages);
 
   return (
     <>
@@ -123,9 +113,10 @@ const RoomNumber = ({ name }) => {
                 </div>
               ) : null}
 
-              <div className="room__context--messages">
+              <div className="room__context--messages" ref={element}>
                 {massages
                   .filter((text) => text.roomNumber === roomNumber)
+                  .reverse()
                   .map((text, index) => {
                     return (
                       <Message
@@ -135,7 +126,7 @@ const RoomNumber = ({ name }) => {
                       />
                     );
                   })}
-                <div ref={element} />
+                {/* <span ref={element}></span> */}
               </div>
 
               <form onSubmit={handleForm} className="room__context--form">
@@ -155,6 +146,8 @@ const RoomNumber = ({ name }) => {
 RoomNumber.propTypes = {};
 
 export default RoomNumber;
+// console.log(element.current?.clientHeight);
+
 // if (window.close) {
 //   // console.log(`da`);
 //   navigate(`/`);
@@ -176,3 +169,18 @@ export default RoomNumber;
 //     socket.emit("user-leave", { roomNumber, name });
 //     socket.off("user-message");
 //   }
+
+// message?.scrollIntoView({ behavior: "smooth" });
+// element.scrollTo(0, element.current?.clientHeight);
+// element.current?.scrollIntoView({ behavior: "smooth" });
+
+// element.current?.scrollTop = element.current?.clientHeight;
+
+// console.log(massages);
+
+// useEffect(() => {
+//   element.current.scrollIntoView({ behavior: "smooth" });
+// }, [massages]);
+
+// console.log(element.current?.clientHeight);
+// element.addEventListener('scroll')
