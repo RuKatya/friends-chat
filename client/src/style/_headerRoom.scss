@@ -1,0 +1,49 @@
+.headerRoomChat {
+    text-align: center;
+    background-color: rgb(131, 33, 217);
+    padding: 2% 0%;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    &__title {
+        font-size: clamp(20px, 1.5vw, 40px);
+    }
+
+    &__changeNameBtn {
+        position: absolute;
+        left: 2%;
+        border-radius: 0.5rem;
+        border: none;
+        padding: 0.2% 0.5%;
+    }
+
+    &__form {
+        position: absolute;
+        width: 100%;
+        bottom: -3vh;
+        left: 0;
+        background-color: rgb(182, 166, 248);
+        padding: 0.5% 0;
+
+        input,
+        button {
+            padding: 0.2% 0.5%;
+            border: none;
+        }
+
+        input {
+            border-bottom-left-radius: 0.5rem;
+            border-top-left-radius: 0.5rem;
+            width: 20%;
+        }
+
+        button {
+            border-bottom-right-radius: 0.5rem;
+            border-top-right-radius: 0.5rem;
+        }
+    }
+}

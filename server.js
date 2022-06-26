@@ -27,10 +27,10 @@ io.on("connection", (socket) => {
         }
     })
 
-    socket.on("chat-user", ({ roomNumber, msg, userName }) => {
+    socket.on("chat-user", ({ roomNumber, textMsg, userName }) => {
         console.log(`userName:` + userName)
-        console.log('message: ' + msg);
-        io.to(roomNumber).emit('user-message', { msg, userName });
+        console.log('message: ' + textMsg);
+        io.to(roomNumber).emit('user-message', { textMsg, userName });
     })
 
     socket.on("user-leave", ({ roomNumber, userName }) => {

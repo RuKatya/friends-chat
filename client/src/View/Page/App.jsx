@@ -1,19 +1,18 @@
-import { Link, Outlet } from "react-router-dom";
 import Login from "../Components/Login";
-import NameInput from "../Components/NameInput";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 function App({ userName, setUserName }) {
+  console.log(userName);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userName) navigate("/1111");
+  });
+
   return (
     <div className="app">
-      {userName ? (
-        navigate(`/1111`)
-      ) : (
-        <>
-          <Login setUserName={setUserName} />
-        </>
-      )}
+      {userName ? null : <Login setUserName={setUserName} />}
     </div>
   );
 }

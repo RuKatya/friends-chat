@@ -4,50 +4,31 @@ import { socket } from "../../index";
 import { useNavigate } from "react-router-dom";
 import Message from "../Components/Message";
 import { useRef } from "react";
+import HeaderOfChat from "../Components/HeaderOfChat";
 
 let textsTemp = [];
 
-const RoomNumber = ({ userName }) => {
+const RoomNumber = ({ userName, setUserName }) => {
   const [massages, setMassages] = useState([]);
-  const [userNameGet, setUserNameGet] = useState();
-  const [amountOfUsers, setAmountOfUsers] = useState();
-  const [userList, setUserList] = useState();
   const [up, setUp] = useState(2);
-  const element = useRef(null);
+  const textElement = useRef(null);
+  const [textMsg, setTextMsg] = useState();
 
   let { roomNumber } = useParams();
 
   let navigate = useNavigate();
 
-  console.log(userName);
   useEffect(() => {
     if (roomNumber) {
       socket.emit("user-join", { roomNumber, userName });
     }
 
-    // socket.on("user-get-in", (userName) => {
-    //   // console.log(`user get in ${name}`);
-    //   setUserNameGet(userName);
-    // });
-
-    // socket.on("users-amount", (countOfUsers) => {
-    //   // console.log(`amount users ${countOfUsers}`);
-    //   setAmountOfUsers(countOfUsers);
-    // });
-
-    socket.on("user-message", ({ msg, userName }) => {
-      // console.log(msg);
-      // console.log(userName);
-      if (msg && roomNumber) {
-        textsTemp.push({ msg, roomNumber, userName });
+    socket.on("user-message", ({ textMsg, userName }) => {
+      if (textMsg && roomNumber) {
+        textsTemp.push({ textMsg, roomNumber, userName });
         setMassages(textsTemp);
         setUp(Math.random());
       }
-    });
-
-    socket.on("user-list", (connectedUsers) => {
-      // console.log(connectedUsers);
-      setUserList(connectedUsers);
     });
 
     window.addEventListener("beforeunload", (e) => {
@@ -61,17 +42,14 @@ const RoomNumber = ({ userName }) => {
     };
   }, [roomNumber]);
 
-  // console.log(userList);
-
   function handleForm(e) {
     try {
       e.preventDefault();
 
-      let msg = e.target.elements.msg.value;
-
+      console.log(textMsg);
       if (userName) {
-        if (msg.length > 0) {
-          socket.emit("chat-user", { roomNumber, msg, userName });
+        if (textMsg.length > 0) {
+          socket.emit("chat-user", { roomNumber, textMsg, userName });
         } else {
           alert("message too short kapara");
         }
@@ -85,36 +63,40 @@ const RoomNumber = ({ userName }) => {
     }
   }
 
+  function checkTextInput(e) {
+    const text = textElement.current.value;
+
+    e.preventDefault();
+
+    setTextMsg(text);
+
+    if (e.shiftKey === true && e.key === "Enter") {
+      return;
+    }
+    if (e.key === "Enter") {
+      if (textMsg.length > 0) {
+        socket.emit("chat-user", {
+          roomNumber,
+          textMsg,
+          userName,
+        });
+      } else {
+        alert("message too short kapara");
+      }
+
+      e.target.offsetParent.reset();
+    }
+  }
+
   return (
     <>
       {userName ? (
         <div className="room">
-          <h2 className="room__header">
-            Room: {roomNumber} {/* | count of Users:{" "} */}
-            {/* <div>{userList ? <> | {amountOfUsers}</> : <>0</>}</div> */}
-          </h2>
+          <HeaderOfChat roomNumber={roomNumber} setUserName={setUserName} />
 
           <div className="room__context">
-            {/* <ul className="room__context--userList">
-              {userList ? (
-                <>
-                  {userList.map((user) => {
-                    return <li>{user}</li>;
-                  })}
-                </>
-              ) : (
-                <>{null}</>
-              )}
-            </ul> */}
-
             <div>
-              {userNameGet ? (
-                <div className="room__context--userConnect">
-                  User {userNameGet} is here
-                </div>
-              ) : null}
-
-              <div className="room__context--messages" ref={element}>
+              <div className="room__context--messages">
                 {massages
                   .filter((text) => text.roomNumber === roomNumber)
                   .reverse()
@@ -122,16 +104,41 @@ const RoomNumber = ({ userName }) => {
                     return (
                       <Message
                         nameUser={text.userName}
-                        messageUser={text.msg}
+                        messageUser={text.textMsg}
                         key={index}
                       />
                     );
                   })}
-                {/* <span ref={element}></span> */}
               </div>
 
               <form onSubmit={handleForm} className="room__context--form">
-                <textarea name="msg" placeholder="Enter message"></textarea>
+                <textarea
+                  name="msg"
+                  placeholder="Enter message"
+                  ref={textElement}
+                  onKeyUp={checkTextInput}
+                  // onKeyDown={(e) => {
+                  //   // e.preventDefault();
+                  //   console.log(e);
+
+                  //   if (e.shiftKey === true && e.key === "Enter") {
+                  //     return;
+                  //   }
+                  //   if (e.key === "Enter") {
+                  //     if (textMsg.length > 0) {
+                  //       socket.emit("chat-user", {
+                  //         roomNumber,
+                  //         textMsg,
+                  //         userName,
+                  //       });
+                  //     } else {
+                  //       alert("message too short kapara");
+                  //     }
+
+                  //     e.target.offsetParent.form.reset();
+                  //   }
+                  // }}
+                ></textarea>
                 <button type="submit">Send</button>
               </form>
             </div>
@@ -147,41 +154,3 @@ const RoomNumber = ({ userName }) => {
 RoomNumber.propTypes = {};
 
 export default RoomNumber;
-// console.log(element.current?.clientHeight);
-
-// if (window.close) {
-//   // console.log(`da`);
-//   navigate(`/`);
-// }
-
-// if (window.close) {
-//   // console.log(`da`);
-//   navigate(`/`);
-// }
-// if (window.onunload) {
-//   console.log("bla");
-// }
-// navigate(`/`);
-
-// socket.emit("user-leave", { roomNumber, name });
-// socket.off("user-message");,
-
-//   if (window.closed) {
-//     socket.emit("user-leave", { roomNumber, name });
-//     socket.off("user-message");
-//   }
-
-// message?.scrollIntoView({ behavior: "smooth" });
-// element.scrollTo(0, element.current?.clientHeight);
-// element.current?.scrollIntoView({ behavior: "smooth" });
-
-// element.current?.scrollTop = element.current?.clientHeight;
-
-// console.log(massages);
-
-// useEffect(() => {
-//   element.current.scrollIntoView({ behavior: "smooth" });
-// }, [massages]);
-
-// console.log(element.current?.clientHeight);
-// element.addEventListener('scroll')

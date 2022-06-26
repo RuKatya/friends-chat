@@ -18,7 +18,9 @@ const RoutesPage = () => {
           />
           <Route
             path=":roomNumber"
-            element={<RoomNumber userName={userName} />}
+            element={
+              <RoomNumber userName={userName} setUserName={setUserName} />
+            }
           />
         </Route>
       </Routes>
