@@ -1,25 +1,25 @@
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import App from "../App";
-import Auth from "../View/Page/Auth";
+import App from "../View/Page/App";
 import RoomNumber from "../View/Page/RoomNumber";
 import Layout from "./Layout";
+import useLocalStorage from "../View/Hooks/useLocalStorage";
 
 const RoutesPage = () => {
-  const [name, setName] = useState("");
+  const [userName, setUserName] = useLocalStorage("UserName");
 
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<Layout />}>
-          <Route index element={<Auth />} />
-          <Route path="chats" element={<App />}>
-            <Route path=":roomNumber" element={<RoomNumber />} />
-          </Route>
-        </Route> */}
         <Route path="/" element={<Layout />}>
-          <Route index element={<App setName={setName} name={name} />} />
-          <Route path=":roomNumber" element={<RoomNumber name={name} />} />
+          <Route
+            index
+            element={<App userName={userName} setUserName={setUserName} />}
+          />
+          <Route
+            path=":roomNumber"
+            element={<RoomNumber userName={userName} />}
+          />
         </Route>
       </Routes>
     </BrowserRouter>

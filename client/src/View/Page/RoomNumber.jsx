@@ -7,7 +7,7 @@ import { useRef } from "react";
 
 let textsTemp = [];
 
-const RoomNumber = ({ name }) => {
+const RoomNumber = ({ userName }) => {
   const [massages, setMassages] = useState([]);
   const [userNameGet, setUserNameGet] = useState();
   const [amountOfUsers, setAmountOfUsers] = useState();
@@ -19,26 +19,27 @@ const RoomNumber = ({ name }) => {
 
   let navigate = useNavigate();
 
+  console.log(userName);
   useEffect(() => {
     if (roomNumber) {
-      socket.emit("user-join", { roomNumber, name });
+      socket.emit("user-join", { roomNumber, userName });
     }
 
-    socket.on("user-get-in", (name) => {
-      // console.log(`user get in ${name}`);
-      setUserNameGet(name);
-    });
+    // socket.on("user-get-in", (userName) => {
+    //   // console.log(`user get in ${name}`);
+    //   setUserNameGet(userName);
+    // });
 
-    socket.on("users-amount", (countOfUsers) => {
-      // console.log(`amount users ${countOfUsers}`);
-      setAmountOfUsers(countOfUsers);
-    });
+    // socket.on("users-amount", (countOfUsers) => {
+    //   // console.log(`amount users ${countOfUsers}`);
+    //   setAmountOfUsers(countOfUsers);
+    // });
 
-    socket.on("user-message", ({ msg, name }) => {
+    socket.on("user-message", ({ msg, userName }) => {
       // console.log(msg);
-      // console.log(name);
+      // console.log(userName);
       if (msg && roomNumber) {
-        textsTemp.push({ msg, roomNumber, name });
+        textsTemp.push({ msg, roomNumber, userName });
         setMassages(textsTemp);
         setUp(Math.random());
       }
@@ -55,7 +56,7 @@ const RoomNumber = ({ name }) => {
     });
 
     return () => {
-      socket.emit("user-leave", { roomNumber, name });
+      socket.emit("user-leave", { roomNumber, userName });
       socket.off("user-message");
     };
   }, [roomNumber]);
@@ -68,9 +69,9 @@ const RoomNumber = ({ name }) => {
 
       let msg = e.target.elements.msg.value;
 
-      if (name) {
+      if (userName) {
         if (msg.length > 0) {
-          socket.emit("chat-user", { roomNumber, msg, name });
+          socket.emit("chat-user", { roomNumber, msg, userName });
         } else {
           alert("message too short kapara");
         }
@@ -86,11 +87,11 @@ const RoomNumber = ({ name }) => {
 
   return (
     <>
-      {name ? (
+      {userName ? (
         <div className="room">
           <h2 className="room__header">
-            Room: {roomNumber} |{/* | count of Users:{" "} */}
-            <div>{userList ? <> | {amountOfUsers}</> : <>0</>}</div>
+            Room: {roomNumber} {/* | count of Users:{" "} */}
+            {/* <div>{userList ? <> | {amountOfUsers}</> : <>0</>}</div> */}
           </h2>
 
           <div className="room__context">
@@ -120,7 +121,7 @@ const RoomNumber = ({ name }) => {
                   .map((text, index) => {
                     return (
                       <Message
-                        nameUser={text.name}
+                        nameUser={text.userName}
                         messageUser={text.msg}
                         key={index}
                       />
