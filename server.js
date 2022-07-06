@@ -16,14 +16,15 @@ io.on("connection", (socket) => {
     socket.on("user-join", ({ roomNumber, userName }) => {
         if (roomNumber) {
             socket.join(roomNumber)
-            console.log(`connect ${userName} to room ${roomNumber}`)
+            console.log(socket.id)
+            // console.log(`connect ${userName} to room ${roomNumber}`)
             const countOfUsers = io.sockets.adapter.rooms.get(roomNumber).size
             console.log(`now in the room ${countOfUsers}`)
-            io.to(roomNumber).emit("user-get-in", userName)
-            io.to(roomNumber).emit("users-amount", countOfUsers)
-            connectedUsers.push(userName)
-            console.log(connectedUsers)
-            io.to(roomNumber).emit("user-list", connectedUsers)
+            // io.to(roomNumber).emit("user-get-in", userName)
+            // io.to(roomNumber).emit("users-amount", countOfUsers)
+            // connectedUsers.push(userName)
+            // console.log(connectedUsers)
+            // io.to(roomNumber).emit("user-list", connectedUsers)
         }
     })
 
@@ -42,6 +43,13 @@ io.on("connection", (socket) => {
             socket.leave(roomNumber);
         }
     });
+
+    socket.on("disconnect", () => {
+        // const countOfUsers = io.sockets.adapter.rooms.get(roomNumber).size
+        // console.log(`now in the room ${countOfUsers}`)
+        // console.log(io)
+        console.log(`out `)
+    })
 })
 
 app.get('*', (req, res) => {

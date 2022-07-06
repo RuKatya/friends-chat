@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { socket } from "../../index";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Message from "../Components/Message";
 import { useRef } from "react";
 import HeaderOfChat from "../Components/HeaderOfChat";
@@ -31,22 +30,31 @@ const RoomNumber = ({ userName, setUserName }) => {
       }
     });
 
-    window.addEventListener("beforeunload", (e) => {
-      e.preventDefault();
-      e.returnValue = "";
-    });
-
     return () => {
       socket.emit("user-leave", { roomNumber, userName });
       socket.off("user-message");
     };
   }, [roomNumber]);
 
+  // window.addEventListener("beforeunload", (e) => {
+  //   e.preventDefault();
+
+  //   // console.log(e.currentTarget.closed);
+  //   e.returnValue = "";
+
+  //   if (e.currentTarget.closed === false) {
+  //     socket.emit("user-join", { roomNumber, userName });
+  //   } else {
+  //     socket.emit("disconnect", { userName });
+  //   }
+
+  //   // console.log(e.returnValue);
+  // });
+
   function handleForm(e) {
     try {
       e.preventDefault();
 
-      console.log(textMsg);
       if (userName) {
         if (textMsg.length > 0) {
           socket.emit("chat-user", { roomNumber, textMsg, userName });
